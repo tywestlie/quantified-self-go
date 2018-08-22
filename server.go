@@ -11,6 +11,7 @@ import (
   "github.com/gorilla/mux"
 
 )
+
 func getPort() string {
   p := os.Getenv("PORT")
   if p != "" {
@@ -32,10 +33,10 @@ func root(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+  port := getPort()
   router := mux.NewRouter()
 
   router.HandleFunc("/", root).Methods("GET")
-  port := getPort()
 
 
   log.Fatal(http.ListenAndServe(port, router))
