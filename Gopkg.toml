@@ -26,8 +26,7 @@
 [metadata.heroku]
   root-package = "github.com/tywestlie/quantifed-self-go"
   go-version = "1.10.3"
-  install = ["./.."]
-
+  install = [ "./.." ]
 
 [[constraint]]
   name = "github.com/gorilla/mux"
