@@ -5,11 +5,19 @@ import (
   "log"
   "net/http"
   "fmt"
+  "os"
   // "math/rand"
   // "strconv"
   "github.com/gorilla/mux"
 
 )
+func getPort() string {
+  p := os.Getenv("PORT")
+  if p != "" {
+    return ":" + p
+  }
+  return ":3000"
+}
 
 // Food Struct (Model)
 
@@ -27,6 +35,8 @@ func main() {
   router := mux.NewRouter()
 
   router.HandleFunc("/", root).Methods("GET")
+  port := getPort()
 
-  log.Fatal(http.ListenAndServe(":3000", router))
+
+  log.Fatal(http.ListenAndServe(port, router))
 }
