@@ -1,15 +1,11 @@
 package main
 
 import (
-  // "encoding/json"
   "log"
   "net/http"
   "fmt"
   "os"
-  // "math/rand"
-  // "strconv"
   "github.com/gorilla/mux"
-
 )
 
 func getPort() string {
