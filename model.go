@@ -33,6 +33,26 @@ func getFoods(w http.ResponseWriter, r *http.Request) {
    rows.Scan(&food.ID, &food.Name, &food.Calories)
    foods = append(foods, food)
  }
- fmt.Println(foods)
+
  json.NewEncoder(w).Encode(foods)
+}
+
+type TupperWare struct {
+  NewFood NewFood `json:"food"`
+}
+
+type NewFood struct {
+  Name string `json:"name"`
+  Calories string `json:"calories"`
+}
+
+func createFood(w http.ResponseWriter, r *http.Request) {
+  var tupperWare TupperWare
+  _ = json.NewDecoder(r.body).Decode(&foodHolder)
+  calories,_ := strcov.Atoi(tupperWare.NewFood.Calories)
+  food := Food{Name: tupperWare.NewFood.Name, Calories: calories}
+  query := "INSERT INTO foods (name, calories) VALUES ($1, $2) RETURNING id"
+  database.QueryRow(query, food.Name, food.Calories).Scan(&id)
+
+  json.NewEncoder(w).Encode(id)
 }
