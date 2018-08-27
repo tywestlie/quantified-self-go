@@ -12,11 +12,12 @@ import (
 
 var database *sql.DB
 
-func initializeDB() {
-  database, err = sql.Open("postgres", dbname())
+func initializeDB(){
+  db, err := sql.Open("postgres", dbname())
   if err != nil {
     log.Fatal(err)
   }
+  database = db
 }
 
 func dbname() string {
