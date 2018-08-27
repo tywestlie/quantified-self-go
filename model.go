@@ -1,6 +1,7 @@
 package main
 
 import (
+  "log"
   "net/http"
   "encoding/json"
   "github.com/gorilla/mux"
@@ -15,15 +16,22 @@ type Food struct {
 }
 
 func getFood(w http.ResponseWriter, r *http.Request) {
+  fmt.Println("GETFOOD")
   var food Food
   params := mux.Vars(r)
     database.QueryRow("SELECT name, calories FROM foods WHERE id=$1",
        params["id"]).Scan(&food.Name, &food.Calories)
+       fmt.Println("GETFOOD")
   json.NewEncoder(w).Encode(food)
 }
 
 func getFoods(w http.ResponseWriter, r *http.Request) {
- rows, _ := database.Query("SELECT * FROM foods;")
+  fmt.Println("GETFOODZZ")
+ rows, err := database.Query("SELECT * FROM foods;")
+ fmt.Println("GETFOODZZ")
+ if err != nil{
+   log.Fatal(err)
+ }
 
  foods := []Food {}
 
@@ -46,6 +54,7 @@ type NewFood struct {
 }
 
 func createFood(w http.ResponseWriter, r *http.Request) {
+  fmt.Println("HI HI HI HI")
   var tupperWare TupperWare
   _ = json.NewDecoder(r.Body).Decode(&tupperWare)
   fmt.Println("Preparing to add food!", tupperWare)
