@@ -7,6 +7,7 @@ import (
   "os"
   "database/sql"
   "github.com/gorilla/mux"
+  "github.com/gorilla/handlers"
   "github.com/lib/pq"
 )
 
@@ -53,6 +54,8 @@ func main() {
   router.HandleFunc("/api/v1/foods", getFoods).Methods("GET")
   router.HandleFunc("/api/v1/foods/{id}", getFood).Methods("GET")
 
-
-  log.Fatal(http.ListenAndServe(port, router))
+  log.Fatal(http.ListenAndServe(port, handlers.CORS(
+  handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+  handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}),
+  handlers.AllowedOrigins([]string{"*"}))(router)))
 }
