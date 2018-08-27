@@ -50,8 +50,8 @@ func main() {
   router := mux.NewRouter()
 
   router.HandleFunc("/", root).Methods("GET")
-  router.HandleFunc("/api/v1/foods", createFood).Methods("POST")
-  router.HandleFunc("/api/v1/foods", getFoods).Methods("GET")
+  router.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
+  router.HandleFunc("/api/v1/foods/", getFoods).Methods("GET")
   router.HandleFunc("/api/v1/foods/{id}", getFood).Methods("GET")
 
   log.Fatal(http.ListenAndServe(port, handlers.CORS(
