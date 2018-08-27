@@ -25,8 +25,6 @@ func getFood(w http.ResponseWriter, r *http.Request) {
 func getFoods(w http.ResponseWriter, r *http.Request) {
  rows, _ := database.Query("SELECT * FROM foods;")
 
- fmt.Println(rows)
-
  foods := []Food {}
 
  for rows.Next() {
@@ -50,6 +48,7 @@ type NewFood struct {
 func createFood(w http.ResponseWriter, r *http.Request) {
   var tupperWare TupperWare
   _ = json.NewDecoder(r.Body).Decode(&tupperWare)
+  fmt.Println("Preparing to add food!", tupperWare)
   calories,_ := strconv.Atoi(tupperWare.NewFood.Calories)
   food := Food{Name: tupperWare.NewFood.Name, Calories: calories}
   query := "INSERT INTO foods (name, calories) VALUES ($1, $2) RETURNING id"
