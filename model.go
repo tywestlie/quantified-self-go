@@ -5,6 +5,7 @@ import (
   "encoding/json"
   "github.com/gorilla/mux"
   "fmt"
+  "strconv"
 )
 
 type Food struct {
@@ -48,10 +49,12 @@ type NewFood struct {
 
 func createFood(w http.ResponseWriter, r *http.Request) {
   var tupperWare TupperWare
-  _ = json.NewDecoder(r.body).Decode(&foodHolder)
-  calories,_ := strcov.Atoi(tupperWare.NewFood.Calories)
+  _ = json.NewDecoder(r.Body).Decode(&tupperWare)
+  calories,_ := strconv.Atoi(tupperWare.NewFood.Calories)
   food := Food{Name: tupperWare.NewFood.Name, Calories: calories}
   query := "INSERT INTO foods (name, calories) VALUES ($1, $2) RETURNING id"
+  fmt.Println(food)
+  id := 0
   database.QueryRow(query, food.Name, food.Calories).Scan(&id)
 
   json.NewEncoder(w).Encode(id)
