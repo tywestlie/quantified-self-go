@@ -4,7 +4,6 @@ import (
   "net/http"
   "encoding/json"
   "github.com/gorilla/mux"
-  // "errors"
 )
 
 type Food struct {

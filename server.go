@@ -10,10 +10,6 @@ import (
   "github.com/lib/pq"
 )
 
-// type App struct {
-//   DB  *sql.DB
-// }
-
 var database *sql.DB
 
 func initializeDB() {
