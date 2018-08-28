@@ -55,15 +55,22 @@ type NewFood struct {
 
 func createFood(w http.ResponseWriter, r *http.Request) {
   fmt.Println("HI HI HI HI")
+  w.Header().Set("Content-Type", "application/json")
   var tupperWare TupperWare
   _ = json.NewDecoder(r.Body).Decode(&tupperWare)
-  fmt.Println("Preparing to add food!", tupperWare)
+
+  fmt.Printf("Params: %#v\n", tupperWare)
+
   calories,_ := strconv.Atoi(tupperWare.NewFood.Calories)
   food := Food{Name: tupperWare.NewFood.Name, Calories: calories}
   query := "INSERT INTO foods (name, calories) VALUES ($1, $2) RETURNING id"
   fmt.Println(food)
   id := 0
-  database.QueryRow(query, food.Name, food.Calories).Scan(&id)
+  err := database.QueryRow(query, food.Name, food.Calories).Scan(&id)
+  if err != nil {
+    log.Fatal(err)
+  }
+  fmt.Println("Added food", id)
 
   json.NewEncoder(w).Encode(id)
 }

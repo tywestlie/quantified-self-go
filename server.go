@@ -50,8 +50,6 @@ func main() {
   port := getPort()
   router := mux.NewRouter()
 
-  fmt.Println(database)
-
   router.HandleFunc("/", root).Methods("GET")
   router.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
   router.HandleFunc("/api/v1/foods/", getFoods).Methods("GET")
