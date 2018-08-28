@@ -20,6 +20,7 @@ func initializeDB(){
   }
   database = db
   migrateDB()
+  seedDB()
 }
 
 func dbname() string {

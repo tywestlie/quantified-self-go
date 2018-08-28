@@ -10,6 +10,11 @@ func migrateDB() {
   database.Exec(createMealFoodsTable)
 }
 
+func seedDB() {
+  database.Exec(seedMeals)
+}
+
+const seedMeals = `INSERT INTO meals (name) VALUES ('Breakfast'), ('Snacks'), ('Lunch'), ('Dinner')`
 
 const createFoodsTable = `CREATE TABLE IF NOT EXISTS foods
 (
