@@ -82,3 +82,17 @@ func getFood(w http.ResponseWriter, r *http.Request) {
 
     json.NewEncoder(w).Encode(id)
   }
+
+  // func updateFood(w http.ResponseWriter, r *http.Request) {
+  //   vars := mux.Vars(r)
+  //   id, err := strcov.Atoi(vars["id"])
+  //   if err != nil {
+  //      respondWithError(w, http.StatusBadRequest, "Invalid food ID")
+  //      return
+  //  }
+  //
+  //  var food Food
+  //  decoder := json.NewDecoder(r.Body)
+  //
+  //  food.ID = id
+  // }
