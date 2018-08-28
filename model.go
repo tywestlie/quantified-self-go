@@ -10,7 +10,7 @@ import (
 )
 
 type Food struct {
-  ID  string `json :"id"`
+  ID  int `json :"id"`
   Name  string `json :"name"`
   Calories  int `json :"calories"`
 }
@@ -27,7 +27,7 @@ func getFood(w http.ResponseWriter, r *http.Request) {
 
 func getFoods(w http.ResponseWriter, r *http.Request) {
   fmt.Println("GETFOODZZ")
- rows, err := database.Query("SELECT * FROM foods;")
+ rows, err := database.Query("SELECT * FROM foods")
  fmt.Println("GETFOODZZ")
  if err != nil{
    log.Fatal(err)
@@ -39,7 +39,10 @@ func getFoods(w http.ResponseWriter, r *http.Request) {
    var food Food
    rows.Scan(&food.ID, &food.Name, &food.Calories)
    foods = append(foods, food)
+   fmt.Println(food)
  }
+
+ fmt.Println(foods)
 
  json.NewEncoder(w).Encode(foods)
 }
@@ -64,7 +67,7 @@ func createFood(w http.ResponseWriter, r *http.Request) {
   calories,_ := strconv.Atoi(tupperWare.NewFood.Calories)
   food := Food{Name: tupperWare.NewFood.Name, Calories: calories}
   query := "INSERT INTO foods (name, calories) VALUES ($1, $2) RETURNING id"
-  fmt.Println(food)
+  fmt.Println(food.Name, food.Calories)
   id := 0
   err := database.QueryRow(query, food.Name, food.Calories).Scan(&id)
   if err != nil {
