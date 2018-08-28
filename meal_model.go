@@ -4,9 +4,9 @@ import (
   "log"
   "net/http"
   "encoding/json"
-  // "github.com/gorilla/mux"
+  "github.com/gorilla/mux"
   "fmt"
-  // "strconv"
+  "strconv"
 )
 
 type Meal struct {
@@ -15,14 +15,10 @@ type Meal struct {
   Foods     []Food `json:"foods"`
 }
 
-func getMeal(w http.ResponseWriter, r *http.Request) {
-
-}
 func getMeals(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   fmt.Println("GET MEALZZ")
   rows, err := database.Query("SELECT * FROM meals")
-
 
   if err != nil{
     log.Fatal(err)
@@ -49,7 +45,25 @@ func getMeals(w http.ResponseWriter, r *http.Request) {
     fmt.Println(meals[i])
   }
 
-
-
   json.NewEncoder(w).Encode(meals)
+}
+
+func getMeal(w http.ResponseWriter, r *http.Request) {
+  var meal Meal
+  var food Food
+
+  w.Header().Set("Content-Type", "application/json")
+  params := mux.Vars(r)
+  id, _ := strconv.Atoi(params["id"])
+
+  database.QueryRow("SELECT * FROM meals WHERE id= $1", id).Scan(&meal.ID, &meal.Name)
+
+  rows, _ := database.Query("SELECT foods.id, foods.name, foods.calories FROM foods INNER JOIN meal_foods ON foods.id = meal_foods.food_id WHERE meal_foods.meal_id = $1 ", id)
+
+  for rows.Next() {
+    rows.Scan(&food.ID, &food.Name, &food.Calories)
+    meal.Foods = append(meal.Foods, food)
+  }
+
+  json.NewEncoder(w).Encode(meal)
 }

@@ -57,6 +57,7 @@ func main() {
   router.HandleFunc("/api/v1/foods/{id}", getFood).Methods("GET")
   router.HandleFunc("/api/v1/foods/{id}", deleteFood).Methods("DELETE")
   router.HandleFunc("/api/v1/meals/", getMeals).Methods("GET")
+  router.HandleFunc("/api/v1/meals/{id}/foods/", getMeal).Methods("GET")
 
 
   log.Fatal(http.ListenAndServe(port, handlers.CORS(
