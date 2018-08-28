@@ -16,7 +16,7 @@ const createFoodsTable = `CREATE TABLE IF NOT EXISTS foods
 id SERIAL,
 name TEXT NOT NULL,
 calories INT,
-CONSTRAINT products_pkey PRIMARY KEY (id)
+CONSTRAINT food_pkey PRIMARY KEY (id)
 )`
 
 const createMealsTable = `CREATE TABLE IF NOT EXISTS meals
