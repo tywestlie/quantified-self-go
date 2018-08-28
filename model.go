@@ -10,9 +10,9 @@ import (
 )
 
 type Food struct {
-  ID  int `json:"id"`
-  Name  string `json:"name"`
-  Calories  int `json:"calories"`
+  ID        int    `json:"id"`
+  Name      string `json:"name"`
+  Calories  int    `json:"calories"`
 }
 
 func getFood(w http.ResponseWriter, r *http.Request) {
@@ -80,7 +80,7 @@ func getFood(w http.ResponseWriter, r *http.Request) {
     }
     fmt.Println("Added food", id)
 
-    json.NewEncoder(w).Encode(id)
+    json.NewEncoder(w).Encode(food)
   }
 
   // func updateFood(w http.ResponseWriter, r *http.Request) {
@@ -96,3 +96,14 @@ func getFood(w http.ResponseWriter, r *http.Request) {
   //
   //  food.ID = id
   // }
+
+  func deleteFood(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "application/json")
+    var food Food
+
+    params := mux.Vars(r)
+    id, _ := strconv.Atoi(params["id"])
+    database.QueryRow("DELETE FROM foods WHERE id=$1 RETURNING id,  name", id).Scan(&id, &food.Name)
+    fmt.Println(id, food.Name)
+    json.NewEncoder(w).Encode(id)
+    }

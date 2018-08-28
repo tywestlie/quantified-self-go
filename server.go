@@ -54,6 +54,7 @@ func main() {
   router.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
   router.HandleFunc("/api/v1/foods/", getFoods).Methods("GET")
   router.HandleFunc("/api/v1/foods/{id}", getFood).Methods("GET")
+  router.HandleFunc("/api/v1/foods/{id}", deleteFood).Methods("DELETE")
 
   log.Fatal(http.ListenAndServe(port, handlers.CORS(
   handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
