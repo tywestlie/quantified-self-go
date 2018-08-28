@@ -19,6 +19,7 @@ func initializeDB(){
     log.Fatal(err)
   }
   database = db
+  migrateDB()
 }
 
 func dbname() string {
