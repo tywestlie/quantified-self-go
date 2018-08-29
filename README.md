@@ -1,6 +1,6 @@
 # Quantified Self: Go
 
-This application is a Go/Mux back-end with a PostgreSQL database. It is designed to serve food, meal and calorie information via JSON payloads to a javaScript front-end found [here](http://roasted-throat.surge.sh/index.html). The GO/Mux API is also deployed [here](https://qs-go.herokuapp.com/).
+This application is a Go/Mux back-end with a PostgreSQL database. It is designed to serve food, meal and calorie information via JSON payloads to a javaScript front-end found [here](http://roasted-throat.surge.sh/index.html). The Go/Mux API is also deployed [here](https://qs-go.herokuapp.com/).
 
 # Requests
 These are the possible requests from the application and their JSON payloads.
