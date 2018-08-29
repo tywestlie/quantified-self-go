@@ -55,6 +55,7 @@ func routesSetup(r *mux.Router) {
   r.HandleFunc("/api/v1/meals/", getMeals).Methods("GET")
   r.HandleFunc("/api/v1/meals/{id}/foods/", getMeal).Methods("GET")
   r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", createMealFood).Methods("POST")
+  r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", deleteMealFood).Methods("DELETE")
 }
 
 func main() {

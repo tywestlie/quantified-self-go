@@ -17,19 +17,15 @@ type Food struct {
 
 func getFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
-  // fmt.Println("GETFOOD")
   var food Food
   params := mux.Vars(r)
 
   database.QueryRow("SELECT name, calories FROM foods WHERE id=$1",
     params["id"]).Scan(&food.Name, &food.Calories)
-    // fmt.Println("GETFOOD")
     json.NewEncoder(w).Encode(food)
-    // fmt.Println(food)
   }
 
   func getFoods(w http.ResponseWriter, r *http.Request) {
-    fmt.Println("GETFOODZZ")
     w.Header().Set("Content-Type", "application/json")
     rows, err := database.Query("SELECT * FROM foods")
     fmt.Println(rows)
@@ -44,12 +40,9 @@ func getFood(w http.ResponseWriter, r *http.Request) {
       var food Food
       rows.Scan(&food.ID, &food.Name, &food.Calories)
       foods = append(foods, food)
-      // fmt.Println(food)
     }
 
-
     json.NewEncoder(w).Encode(foods)
-    // fmt.Println(foods)
   }
 
   type TupperWare struct {
@@ -62,7 +55,6 @@ func getFood(w http.ResponseWriter, r *http.Request) {
   }
 
   func createFood(w http.ResponseWriter, r *http.Request) {
-    fmt.Println("HI HI HI HI")
     w.Header().Set("Content-Type", "application/json")
     var tupperWare TupperWare
     _ = json.NewDecoder(r.Body).Decode(&tupperWare)
@@ -104,6 +96,6 @@ func getFood(w http.ResponseWriter, r *http.Request) {
     params := mux.Vars(r)
     id, _ := strconv.Atoi(params["id"])
     database.QueryRow("DELETE FROM foods WHERE id=$1 RETURNING id,  name", id).Scan(&id, &food.Name)
-    fmt.Println(id, food.Name)
+
     json.NewEncoder(w).Encode(id)
     }

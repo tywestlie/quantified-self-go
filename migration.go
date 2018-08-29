@@ -5,15 +5,15 @@ import (
 )
 
 func migrateDB() {
-  // database.Exec(createFoodsTable)
+  database.Exec(createFoodsTable)
   database.Exec(createMealsTable)
-  // database.Exec(createMealFoodsTable)
+  database.Exec(createMealFoodsTable)
 }
 
 func seedDB() {
-  // database.Exec("TRUNCATE TABLE meal_foods RESTART IDENTITY")
-  // database.Exec("TRUNCATE TABLE foods RESTART IDENTITY")
-  // database.Exec("TRUNCATE TABLE meals RESTART IDENTITY")
+  database.Exec(`DELETE FROM meals;`)
+  database.Exec(`DELETE FROM foods;`)
+  database.Exec(`DELETE FROM meal_foods;`)
 
   database.Exec(seedMeals)
   // database.Exec(seedFoods)

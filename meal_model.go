@@ -17,7 +17,6 @@ type Meal struct {
 
 func getMeals(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
-  fmt.Println("GET MEALZZ")
   rows, err := database.Query("SELECT * FROM meals")
 
   if err != nil{
@@ -26,7 +25,6 @@ func getMeals(w http.ResponseWriter, r *http.Request) {
 
   var meals []Meal
   var meal Meal
-  // var food Food
 
   for rows.Next() {
     rows.Scan(&meal.ID, &meal.Name)
@@ -81,13 +79,28 @@ func createMealFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   params := mux.Vars(r)
 
-  fmt.Println("params:", params)
+  // fmt.Println("params:", params)
   meal_id, _ := strconv.Atoi(params["meal_id"])
-  fmt.Println("meal id", meal_id)
+  // fmt.Println("meal id", meal_id)
   food_id, _ := strconv.Atoi(params["food_id"])
-  fmt.Println("food id", food_id)
+  // fmt.Println("food id", food_id)
   id := 0
   database.QueryRow("INSERT INTO meal_foods (meal_id, food_id) VALUES ($1, $2) RETURNING id", meal_id, food_id).Scan(&id)
 
   json.NewEncoder(w).Encode(id)
+}
+
+func deleteMealFood(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "application/json")
+    params := mux.Vars(r)
+    fmt.Println(params)
+    meal_id, _ := strconv.Atoi(params["meal_id"])
+    fmt.Println(params["meal_id"])
+    food_id, _ := strconv.Atoi(params["food_id"])
+    fmt.Println(params["food_id"])
+    meal_food_id := 0
+    database.QueryRow("DELETE FROM meal_foods WHERE meal_id=$1 AND food_id=$2 RETURNING id", meal_id, food_id).Scan(&meal_food_id)
+
+    json.NewEncoder(w).Encode(meal_food_id)
+    fmt.Println(meal_food_id)
 }
