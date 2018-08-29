@@ -75,19 +75,20 @@ func getFood(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(food)
   }
 
-  // func updateFood(w http.ResponseWriter, r *http.Request) {
-  //   vars := mux.Vars(r)
-  //   id, err := strcov.Atoi(vars["id"])
-  //   if err != nil {
-  //      respondWithError(w, http.StatusBadRequest, "Invalid food ID")
-  //      return
-  //  }
-  //
-  //  var food Food
-  //  decoder := json.NewDecoder(r.Body)
-  //
-  //  food.ID = id
-  // }
+  func updateQuery(food Food) {
+    food_id := 0
+    database.QueryRow("UPDATE foods SET name=$1, calories=$2 WHERE id=$3 RETURNING id", food.Name, food.Calories, food.ID).Scan(&food_id)
+  }
+
+
+  func updateFood(w http.ResponseWriter, r *http.Request) {
+    var food Food
+    var tupperWare TupperWare
+    _ = json.NewDecoder(r.Body).Decode(&tupperWare)
+    calories,_ := strconv.Atoi(tupperWare.NewFood.Calories)
+    food = Food{Name: tupperWare.NewFood.Name, Calories: calories}
+    updateQuery(food)
+  }
 
   func deleteFood(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")

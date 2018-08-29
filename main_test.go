@@ -31,13 +31,13 @@ func TestGetPort(t *testing.T) {
 func TestGetFoods(t *testing.T) {
   r := setup()
   database.Exec("INSERT INTO foods (name, calories) VALUES ('Hotdog', 500)")
-  database.Exec("INSERT INTO foods (name, calories) VALUES ('Burger', 700)")
+  database.Exec("INSERT INTO foods (name, calories) VALUES ('Burger', 1200)")
   req, _ := http.NewRequest("GET", "/api/v1/foods/", nil)
   response := httptest.NewRecorder()
   r.ServeHTTP(response, req)
   actual := response.Body.String()
   actual = strings.TrimRight(actual, "\r\n ")
-  expected := `[{"id":1,"name":"Hotdog","calories":500},{"id":2,"name":"Burger","calories":700}]`
+  expected := `[{"id":1,"name":"Hotdog","calories":500},{"id":2,"name":"Burger","calories":1200}]`
   if actual != expected {
     t.Error("Get Foods - Expected:", expected, "Got:", actual)
   }
