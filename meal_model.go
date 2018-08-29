@@ -26,7 +26,7 @@ func getMeals(w http.ResponseWriter, r *http.Request) {
 
   var meals []Meal
   var meal Meal
-  var food Food
+  // var food Food
 
   for rows.Next() {
     rows.Scan(&meal.ID, &meal.Name)
@@ -36,21 +36,35 @@ func getMeals(w http.ResponseWriter, r *http.Request) {
   fmt.Println(meals)
 
   for i, m := range meals {
-    fmt.Println(m.ID)
-    database.QueryRow("SELECT foods.id, foods.name, foods.calories FROM foods INNER JOIN meal_foods ON foods.id = meal_foods.food_id WHERE meal_foods.meal_id = $1 ", m.ID).Scan(&food.ID, &food.Name, &food.Calories)
-
-    fmt.Println("Should append",food, "to", m)
-
-    meals[i].Foods = append(meals[i].Foods, food)
-    fmt.Println(meals[i])
+  meals[i].Foods = getMealFoods(m.ID)
   }
 
   json.NewEncoder(w).Encode(meals)
 }
 
+func getMealFoods(meal_id int) []Food {
+  rows, err := database.Query("SELECT foods.id, foods.name, foods.calories FROM foods INNER JOIN meal_foods ON foods.id=meal_foods.food_id WHERE meal_foods.meal_id=$1", meal_id)
+  if err != nil {
+    log.Fatal(err)
+  }
+  var (
+    food Food
+    foods []Food
+  )
+  defer rows.Close()
+
+  for rows.Next() {
+    if err := rows.Scan(&food.ID, &food.Name, &food.Calories); err != nil {
+      log.Fatal(err)
+    }
+    foods = append(foods, food)
+  }
+  return foods
+}
+
+
 func getMeal(w http.ResponseWriter, r *http.Request) {
   var meal Meal
-  var food Food
 
   w.Header().Set("Content-Type", "application/json")
   params := mux.Vars(r)
@@ -58,12 +72,7 @@ func getMeal(w http.ResponseWriter, r *http.Request) {
 
   database.QueryRow("SELECT * FROM meals WHERE id= $1", id).Scan(&meal.ID, &meal.Name)
 
-  rows, _ := database.Query("SELECT foods.id, foods.name, foods.calories FROM foods INNER JOIN meal_foods ON foods.id = meal_foods.food_id WHERE meal_foods.meal_id = $1 ", id)
-
-  for rows.Next() {
-    rows.Scan(&food.ID, &food.Name, &food.Calories)
-    meal.Foods = append(meal.Foods, food)
-  }
+  meal.Foods = getMealFoods(id)
 
   json.NewEncoder(w).Encode(meal)
 }
@@ -71,10 +80,14 @@ func getMeal(w http.ResponseWriter, r *http.Request) {
 func createMealFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   params := mux.Vars(r)
+
+  fmt.Println("params:", params)
   meal_id, _ := strconv.Atoi(params["meal_id"])
+  fmt.Println("meal id", meal_id)
   food_id, _ := strconv.Atoi(params["food_id"])
+  fmt.Println("food id", food_id)
   id := 0
-  database.QueryRow("INSERT INTO meal_foods (meal_id, food_id) VALUES ($1, $2) RETURNING id").Scan(&id)
+  database.QueryRow("INSERT INTO meal_foods (meal_id, food_id) VALUES ($1, $2) RETURNING id", meal_id, food_id).Scan(&id)
 
   json.NewEncoder(w).Encode(id)
 }

@@ -45,24 +45,27 @@ func root(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w, "Quantifed Self Go Backend")
 }
 
+
+func routesSetup(r *mux.Router) {
+  r.HandleFunc("/", root).Methods("GET")
+  r.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
+  r.HandleFunc("/api/v1/foods/", getFoods).Methods("GET")
+  r.HandleFunc("/api/v1/foods/{id}", getFood).Methods("GET")
+  r.HandleFunc("/api/v1/foods/{id}", deleteFood).Methods("DELETE")
+  r.HandleFunc("/api/v1/meals/", getMeals).Methods("GET")
+  r.HandleFunc("/api/v1/meals/{id}/foods/", getMeal).Methods("GET")
+  r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", createMealFood).Methods("POST")
+}
+
 func main() {
   initializeDB()
 
+  r := mux.NewRouter()
+  routesSetup(r)
   port := getPort()
-  router := mux.NewRouter()
-
-  router.HandleFunc("/", root).Methods("GET")
-  router.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
-  router.HandleFunc("/api/v1/foods/", getFoods).Methods("GET")
-  router.HandleFunc("/api/v1/foods/{id}", getFood).Methods("GET")
-  router.HandleFunc("/api/v1/foods/{id}", deleteFood).Methods("DELETE")
-  router.HandleFunc("/api/v1/meals/", getMeals).Methods("GET")
-  router.HandleFunc("/api/v1/meals/{id}/foods/", getMeal).Methods("GET")
-  router.HandleFunc("/api/v1/meals/{id}/foods/{id}", createMealFood).Methods("POST")
-
 
   log.Fatal(http.ListenAndServe(port, handlers.CORS(
   handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
   handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}),
-  handlers.AllowedOrigins([]string{"*"}))(router)))
+  handlers.AllowedOrigins([]string{"*"}))(r)))
 }
