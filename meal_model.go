@@ -67,3 +67,14 @@ func getMeal(w http.ResponseWriter, r *http.Request) {
 
   json.NewEncoder(w).Encode(meal)
 }
+
+func createMealFood(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  params := mux.Vars(r)
+  meal_id, _ := strconv.Atoi(params["meal_id"])
+  food_id, _ := strconv.Atoi(params["food_id"])
+  id := 0
+  database.QueryRow("INSERT INTO meal_foods (meal_id, food_id) VALUES ($1, $2) RETURNING id").Scan(&id)
+
+  json.NewEncoder(w).Encode(id)
+}
