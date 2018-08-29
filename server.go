@@ -45,8 +45,11 @@ func root(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w, "Quantifed Self Go Backend")
 }
 
+func main() {
+  initializeDB()
 
-func routesSetup(r *mux.Router) {
+  r := mux.NewRouter()
+  port := getPort()
   r.HandleFunc("/", root).Methods("GET")
   r.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
   r.HandleFunc("/api/v1/foods/", getFoods).Methods("GET")
@@ -56,14 +59,6 @@ func routesSetup(r *mux.Router) {
   r.HandleFunc("/api/v1/meals/{id}/foods/", getMeal).Methods("GET")
   r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", createMealFood).Methods("POST")
   r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", deleteMealFood).Methods("DELETE")
-}
-
-func main() {
-  initializeDB()
-
-  r := mux.NewRouter()
-  routesSetup(r)
-  port := getPort()
 
   log.Fatal(http.ListenAndServe(port, handlers.CORS(
   handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),

@@ -11,9 +11,9 @@ func migrateDB() {
 }
 
 func seedDB() {
-  database.Exec(`DELETE FROM meals;`)
-  database.Exec(`DELETE FROM foods;`)
-  database.Exec(`DELETE FROM meal_foods;`)
+  database.Exec(`DELETE FROM meals`)
+  database.Exec(`DELETE FROM foods`)
+  database.Exec(`DELETE FROM meal_foods`)
 
   database.Exec(seedMeals)
   // database.Exec(seedFoods)
