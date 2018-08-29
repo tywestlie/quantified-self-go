@@ -20,9 +20,10 @@ func getFood(w http.ResponseWriter, r *http.Request) {
   var food Food
   params := mux.Vars(r)
 
-  database.QueryRow("SELECT name, calories FROM foods WHERE id=$1",
-    params["id"]).Scan(&food.Name, &food.Calories)
-    json.NewEncoder(w).Encode(food)
+  database.QueryRow("SELECT * FROM foods WHERE id=$1",
+    params["id"]).Scan(&food.ID, &food.Name, &food.Calories)
+  json.NewEncoder(w).Encode(food)
+  fmt.Println(food)
   }
 
   func getFoods(w http.ResponseWriter, r *http.Request) {
@@ -99,4 +100,4 @@ func getFood(w http.ResponseWriter, r *http.Request) {
     database.QueryRow("DELETE FROM foods WHERE id=$1 RETURNING id,  name", id).Scan(&id, &food.Name)
 
     json.NewEncoder(w).Encode(id)
-    }
+  }

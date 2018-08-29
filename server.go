@@ -44,12 +44,7 @@ func getPort() string {
 func root(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w, "Quantifed Self Go Backend")
 }
-
-func main() {
-  initializeDB()
-
-  r := mux.NewRouter()
-  port := getPort()
+func routes(r *mux.Router) {
   r.HandleFunc("/", root).Methods("GET")
   r.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
   r.HandleFunc("/api/v1/foods/", getFoods).Methods("GET")
@@ -59,6 +54,16 @@ func main() {
   r.HandleFunc("/api/v1/meals/{id}/foods/", getMeal).Methods("GET")
   r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", createMealFood).Methods("POST")
   r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", deleteMealFood).Methods("DELETE")
+}
+
+func main() {
+  initializeDB()
+
+
+  r := mux.NewRouter()
+  port := getPort()
+  
+  routes(r)
 
   log.Fatal(http.ListenAndServe(port, handlers.CORS(
   handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),

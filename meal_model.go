@@ -38,6 +38,7 @@ func getMeals(w http.ResponseWriter, r *http.Request) {
   }
 
   json.NewEncoder(w).Encode(meals)
+
 }
 
 func getMealFoods(meal_id int) []Food {
